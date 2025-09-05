@@ -3,4 +3,4 @@ Trabalho destinado para a matéria "Projeto Aplicado IV" do curso de Ciencia de 
 
 DATA BASE:
 
-DOCUMENTAÇÃO TÉCNICA:
+DOCUMENTAÇÃO TÉCNICA: https://docs.google.com/document/d/1wasxvEBTmaD_ChJYKGQlJ2t7Wojbut5zAprd6n58hSs/edit?usp=sharing
