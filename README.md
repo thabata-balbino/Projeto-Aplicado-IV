@@ -4,8 +4,9 @@ Trabalho destinado para a matéria "Projeto Aplicado IV" do curso de Ciencia de 
 
 Objetivo de Desenvolvimento Sustentável 11 – Cidades e Comunidades Sustentáveis
 
-COLAB: https://colab.research.google.com/drive/1xcCG39amYY3E25X_UPfr7yBRtyy5dfK_#scrollTo=8R_VW8bEpKvN
-
 DATA BASE: API do ArcGIS - https://services1.arcgis.com/OlP4dGNtIcnD3RYf/arcgis/rest/services/
 
 DOCUMENTAÇÃO TÉCNICA: https://docs.google.com/document/d/1wasxvEBTmaD_ChJYKGQlJ2t7Wojbut5zAprd6n58hSs/edit?usp=sharing
+
+ENTREGA 1 (LINK COLAB): https://colab.research.google.com/drive/1xcCG39amYY3E25X_UPfr7yBRtyy5dfK_#scrollTo=8R_VW8bEpKvN
+ENTREGA 2 (LINK COLAB): https://colab.research.google.com/drive/1jfwIqevVEzDhp8WJZ2kb79zTrWkDU-c9#scrollTo=Tax--lV7ov7G
