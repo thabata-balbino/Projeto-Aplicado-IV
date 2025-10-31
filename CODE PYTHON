@@ -1,0 +1,157 @@
+import requests
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, mean_squared_error
+
+# 1. Coletar dados da API ArcGIS
+def fetch_all_data(url, params):
+    all_records = []
+    offset = 0
+    print("Iniciando coleta de dados da API ArcGIS...")
+    while True:
+        params['resultOffset'] = offset
+        response = requests.get(url, params=params)
+        data = response.json()
+        features = data.get('features', [])
+        if not features:
+            break
+        all_records.extend([f['attributes'] for f in features])
+        offset += params['resultRecordCount']
+        if len(features) < params['resultRecordCount']:
+            break
+        print(f"→ Registros coletados até agora: {len(all_records)}")
+    print(f"Coleta finalizada! Total de registros: {len(all_records)}")
+    return pd.DataFrame(all_records)
+
+# 2. Preparar os dados
+def prepare_data(df):
+    df.columns = df.columns.str.lower()
+    if 'data' in df.columns:
+        df['datetime'] = pd.to_datetime(df['data'], errors='coerce')
+    elif 'data_hora' in df.columns:
+        df['datetime'] = pd.to_datetime(df['data_hora'], errors='coerce')
+    else:
+        raise ValueError("Coluna de data não encontrada!")
+    df = df.sort_values('datetime').drop_duplicates(subset=['datetime'])
+    return df
+
+# 3. Relatório de valores ausentes
+def missing_values_report(df):
+    print("\n📋 Relatório de valores ausentes:")
+    print(df.isnull().sum())
+    print("\nPercentual de valores ausentes:")
+    print((df.isnull().mean() * 100).round(2))
+
+# 4. Limpeza
+def clean_data(df, threshold=0.2):
+    df = df.loc[:, df.isnull().mean() < threshold]
+    df = df.dropna(subset=['datetime'])
+    return df
+
+# 5. Análise exploratória
+def exploratory_analysis(df, poluentes=['pm2_5', 'no2', 'o3'], estacao=None):
+    if estacao and 'estacao' in df.columns:
+        df = df[df['estacao'] == estacao]
+        print(f"Análise filtrada para estação: {estacao}")
+    else:
+        print("Análise considerando todas as estações.")
+
+    # Tendência temporal
+    plt.figure(figsize=(15, 5))
+    plotted = False
+    for poluente in poluentes:
+        if poluente in df.columns:
+            plt.plot(df['datetime'], df[poluente], label=poluente)
+            plotted = True
+    if plotted:
+        plt.legend()
+    plt.title('Tendência temporal dos poluentes')
+    plt.xlabel('Data')
+    plt.ylabel('Concentração (µg/m³)')
+    plt.show()
+
+    # Correlação entre poluentes
+    existentes = [p for p in poluentes if p in df.columns]
+    if len(existentes) >= 2:
+        plt.figure(figsize=(8, 5))
+        sns.heatmap(df[existentes].corr(), annot=True, cmap='coolwarm')
+        plt.title('Correlação entre poluentes')
+        plt.show()
+
+# 6. Comparação com limites OMS (usando PM2.5)
+def compare_with_limits(df, limite_pm25=15):
+    df['data'] = df['datetime'].dt.date
+    df_diario = df.groupby('data')['pm2_5'].mean().reset_index()
+    df_diario['acima_limite'] = df_diario['pm2_5'] > limite_pm25
+    percentual_acima = df_diario['acima_limite'].mean() * 100
+    print(f'📊 Percentual de dias acima do limite OMS (PM2.5): {percentual_acima:.2f}%')
+    return df_diario
+
+
+# 7. Salvar resultados
+def save_results(df_diario, filename='analise_diaria_pm25.csv'):
+    df_diario.to_csv(filename, index=False)
+    print(f'Resultados salvos em {filename}')
+
+# 8. Pipeline principal
+def main_pipeline(url, params, estacao=None):
+    print("Iniciando pipeline completo...\n")
+    df = fetch_all_data(url, params)
+    df = prepare_data(df)
+    missing_values_report(df)
+    df = clean_data(df)
+    exploratory_analysis(df, estacao=estacao)
+    if 'pm2_5' in df.columns:
+        df_diario = compare_with_limits(df)
+        save_results(df_diario)
+    else:
+        print("⚠️ Coluna 'pm2_5' não encontrada para comparação de limites.")
+    print("\n✅ Pipeline finalizado com sucesso!")
+    return df
+
+# --- EXECUÇÃO ---
+url = "https://services1.arcgis.com/OlP4dGNtIcnD3RYf/ArcGIS/rest/services/Qualidade_do_ar_dados_horarios_2011_2018/FeatureServer/3/query"
+params = {
+    "where": "1=1",
+    "outFields": "*",
+    "f": "json",
+    "resultRecordCount": 2000,
+    "resultOffset": 0
+}
+
+df = main_pipeline(url, params, estacao=None)
+
+# --- MODELO BASE: Regressão Linear para PM2.5 ---
+print("\nTreinando modelo base (Regressão Linear para PM2.5)...")
+
+# Selecionar apenas variáveis que realmente existem no DataFrame
+variaveis_possiveis = ['temp', 'ur', 'vel_vento', 'o3', 'no2']
+variaveis = [v for v in variaveis_possiveis if v in df.columns]
+
+print("Variáveis disponíveis para o modelo:", variaveis)
+
+df_modelo = df.dropna(subset=['pm2_5'] + variaveis)
+
+
+X = df_modelo[variaveis]
+y = df_modelo['pm2_5']
+
+# Separar treino e teste
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Treinar modelo
+modelo = LinearRegression()
+modelo.fit(X_train, y_train)
+
+# Predições e métricas
+y_pred = modelo.predict(X_test)
+r2 = r2_score(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+
+print(f"\n📈 Resultados do Modelo Base:")
+print(f"Coeficiente de determinação (R²): {r2:.3f}")
+print(f"Erro quadrático médio (MSE): {mse:.2f}")
