@@ -10,3 +10,4 @@ DOCUMENTAÇÃO TÉCNICA: https://docs.google.com/document/d/1wasxvEBTmaD_ChJYKGQ
 
 ENTREGA 1 (LINK COLAB): https://colab.research.google.com/drive/1xcCG39amYY3E25X_UPfr7yBRtyy5dfK_#scrollTo=8R_VW8bEpKvN
 ENTREGA 2 (LINK COLAB): https://colab.research.google.com/drive/1jfwIqevVEzDhp8WJZ2kb79zTrWkDU-c9#scrollTo=Tax--lV7ov7G
+ENTREGA 3 (LINK COLAB): https://colab.research.google.com/drive/1tRmAPmr7Z64u0QwbbJfqN-hgkGlbOsFJ#scrollTo=9x46aSj5Gt0i
