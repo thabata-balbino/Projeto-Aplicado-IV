@@ -6,10 +6,8 @@ Objetivo de Desenvolvimento Sustentável 11 – Cidades e Comunidades Sustentáv
 
 DATA BASE: API do ArcGIS - https://services1.arcgis.com/OlP4dGNtIcnD3RYf/arcgis/rest/services/
 
-DOCUMENTAÇÃO TÉCNICA: https://docs.google.com/document/d/1wasxvEBTmaD_ChJYKGQlJ2t7Wojbut5zAprd6n58hSs/edit?usp=sharing
+ARTIGO: https://docs.google.com/document/d/1cVQjQBF4MoSbr15A61olEo-EqSLKZivD/edit?usp=sharing&ouid=111218178934154311497&rtpof=true&sd=true
 
-ENTREGA 1 (LINK COLAB): https://colab.research.google.com/drive/1xcCG39amYY3E25X_UPfr7yBRtyy5dfK_#scrollTo=8R_VW8bEpKvN
-ENTREGA 2 (LINK COLAB): https://colab.research.google.com/drive/1jfwIqevVEzDhp8WJZ2kb79zTrWkDU-c9#scrollTo=Tax--lV7ov7G
-ENTREGA 3 (LINK COLAB): https://colab.research.google.com/drive/1tRmAPmr7Z64u0QwbbJfqN-hgkGlbOsFJ#scrollTo=9x46aSj5Gt0i
+NOTEBOOK DO PROJETO (LINK COLAB): https://colab.research.google.com/drive/1XPQbErVknRpPupdELOZv98J6z9lb454E?usp=sharing
 
-Código Python (LINK COLAB):https://colab.research.google.com/drive/1jiBx-Yko9ad5a8uosBPgSfh5AVVLCyye#scrollTo=bUhuAAEhFyjj
+VÍDEO DE APRESENTAÇÃO DO PROJETO: https://youtu.be/Qu2Rr3nm5ZI
